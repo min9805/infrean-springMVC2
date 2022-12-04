@@ -56,4 +56,42 @@ public class RequestParamController {
 		return "ok!";
 	}
 
+
+	//해당 요청 파라미터에 대한 필수여부 설정
+	//required true 지만 파라미터가 없으면 bad request 인 400을 에러로 보낸다
+	//int age 일때 파라미터를 보내지 않으면 null이 들어가야하지만 int에서 들어갈 수 없다
+	//Integer age로 바꾸면 가능하다. primitive가 아닌 warp class를 사용한다.
+	//null과 "" 는 다르다. username= 까지만 하면 빈 문자로 확인해서 ok가 출력된다.
+	@ResponseBody
+	@RequestMapping("/request-param-required")
+	public String requestParamRequired(
+			@RequestParam(required = true) String username,
+			@RequestParam(required = false) Integer age
+	){
+		log.info("username={}, age={}",username, age);
+
+		return "ok!";
+	}
+
+	//빈 문자의 경우에도 default가 실행된다.
+	//default 설정 시 required=false 는 의미가 없다.
+	@ResponseBody
+	@RequestMapping("/request-param-default")
+	public String requestParamDefault(
+			@RequestParam(required = true, defaultValue = "guest") String username,
+			@RequestParam(required = false) Integer age
+	){
+		log.info("username={}, age={}",username, age);
+
+		return "ok!";
+	}
+
+	//MultiValueMap 은 파라미터 값을 list로 가진다
+	@ResponseBody
+	@RequestMapping("/request-param-map")
+	public String requestParamMap(@RequestParam Map<String, Object> paramMap){
+		log.info("username={}, age={}", paramMap.get("username"), paramMap.get("age"));
+
+		return "ok!";
+	}
 }
